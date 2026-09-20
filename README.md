@@ -376,3 +376,46 @@ Export the chat to the PushBullet app, create an access token under *Settings �
 
 ---
 
+## ⚠️ Notes, Assumptions & Limitations
+
+- **Library versions matter.** The code relies on APIs that were removed in later releases, so keep the pinned versions:
+  - `emoji==1.7.0` — `emoji.UNICODE_EMOJI` no longer exists in `emoji ≥ 2.0`.
+  - `streamlit==1.10.0` — `st.set_option('deprecation.showfileUploaderEncoding', ...)` and bare `st.pyplot()` (global-figure mode) raise errors in newer Streamlit versions.
+- `Exploratory Data Analysis/app.py` contains an unused `from torch import t` import — installing PyTorch is not required for the analysis itself, so this line can be removed safely.
+- `Exploratory Data Analysis/custom_modules/func_analysis.py` is an **alternate/legacy** module (it expects `Message`, `Date`, `Time`, `Author` column names). Only `get_user_list()` from it is used by the main app; the active analysis path is `preprocessor.py` → `helper.py`.
+- The LSTM notebook trains on **4 of the 6 emotions** (classes `love` and `surprise` are filtered out), which is why its accuracy is higher than the BiLSTM model's.
+- Dataset classes are **imbalanced**, so accuracy alone can be misleading — the BiLSTM notebook also reports a classification report and a row-normalised confusion matrix.
+- The EDA dashboard and the emotion-detection model are currently **two independent pipelines**; the dashboard does not call the trained Keras model for live per-message emotion prediction.
+- The dashboard's sentiment feature uses **TextBlob polarity**, which is lexicon-based and works best on pure English text.
+- Hinglish/native-language text is supported for word-cloud and stop-word filtering (45 language stop-word files are bundled), but the emotion models were trained on **English sentences only**.
+- The `__pycache__` folders in `Exploratory Data Analysis/` (compiled with Python 3.7) are build leftovers and can be deleted safely; add a `.gitignore` to keep them out of version control.
+- `stop_hinglish.txt` exists both at the repository root and inside `configs/stopwords/` — the app reads the copy under `configs/stopwords/`, so the root-level file is a leftover duplicate.
+
+---
+
+## 🔮 Future Scope
+
+- Wire the trained **LSTM/BiLSTM model directly into the Streamlit dashboard** so every chat message gets an emotion label and emotion-wise timelines can be plotted alongside the EDA charts.
+- **Class balancing / class weighting** (or focal loss) plus data augmentation to lift `surprise` and `love` recall.
+- **Multilingual pipeline**: add Googletrans / Hinglish transliteration (as designed in the architecture slides) before emotion detection so regional-language chats can be classified.
+- **Automatic chat ingestion** through the PushBullet API instead of manual `.txt` export.
+- Compare against modern baselines such as **BERT-based transformers**, and tune hyper-parameters (attention layers, Bidirectional GRU, learning-rate schedules).
+- Cloud deployment of the dashboard with authentication and multi-group comparison.
+
+---
+
+## 👤 Author & Acknowledgements
+
+| | |
+| --- | --- |
+| **Author** | Purushottam Kumar — Roll No. 2020178043, MCA (R) |
+| **Project Guide** | Dr. T. Mala, Associate Professor |
+| **Project Type** | Final Year MCA Project — Exploratory Data Analysis and Emotion Detection on WhatsApp |
+
+Sincere thanks to **Dr. T. Mala** for the guidance and continuous support throughout this project, and to the family and friends who shared their chat data for testing.
+
+The deep-learning notebooks follow widely used `sentence;emotion` corpus workflows; the pre-processing/EDA code was written for this project, with publicly available multi-language stop-word lists bundled under `configs/stopwords/`.
+
+---
+
+<p align="center"><i>If you found this project useful, consider giving it a ⭐ — and don't forget to plant trees 🌱</i></p>
