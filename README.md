@@ -415,7 +415,3 @@ Export the chat to the PushBullet app, create an access token under *Settings �
 Sincere thanks to **Dr. T. Mala** for the guidance and continuous support throughout this project, and to the family and friends who shared their chat data for testing.
 
 The deep-learning notebooks follow widely used `sentence;emotion` corpus workflows; the pre-processing/EDA code was written for this project, with publicly available multi-language stop-word lists bundled under `configs/stopwords/`.
-
----
-
-<p align="center"><i>If you found this project useful, consider giving it a ⭐ — and don't forget to plant trees 🌱</i></p>
